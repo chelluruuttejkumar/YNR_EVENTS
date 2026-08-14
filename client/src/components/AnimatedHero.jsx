@@ -249,6 +249,7 @@ function AnimatedHero() {
       let mouseY = 0;
       let currentX = 0;
       let currentY = 0;
+      let animationFrame;
 
       const moveHero = (event) => {
         if (!isDesktop) return;
@@ -292,7 +293,8 @@ function AnimatedHero() {
           y: currentY * 2,
         });
 
-        requestAnimationFrame(updateMouse);
+        animationFrame =
+          requestAnimationFrame(updateMouse);
       };
 
       if (isDesktop) {
@@ -302,7 +304,8 @@ function AnimatedHero() {
           { passive: true }
         );
 
-        requestAnimationFrame(updateMouse);
+        animationFrame =
+          requestAnimationFrame(updateMouse);
       }
 
       /* =========================
@@ -398,6 +401,8 @@ function AnimatedHero() {
             "mousemove",
             moveHero
           );
+
+          cancelAnimationFrame(animationFrame);
         }
 
         buttons.forEach((button) => {
@@ -442,6 +447,10 @@ function AnimatedHero() {
       className="hero hero-cinematic"
       ref={heroRef}
     >
+      {/* =========================
+          HERO BACKGROUND
+      ========================= */}
+
       <div
         ref={imageRef}
         className="hero-image"
@@ -458,10 +467,18 @@ function AnimatedHero() {
         aria-hidden="true"
       />
 
+      {/* =========================
+          PARTICLES
+      ========================= */}
+
       <span className="hero-particle particle-1" />
       <span className="hero-particle particle-2" />
       <span className="hero-particle particle-3" />
       <span className="hero-particle particle-4" />
+
+      {/* =========================
+          ORBIT
+      ========================= */}
 
       <div className="hero-orbit">
         <span>
@@ -469,23 +486,61 @@ function AnimatedHero() {
         </span>
       </div>
 
+      {/* =========================
+          HERO CONTENT
+      ========================= */}
+
       <div
         ref={contentRef}
         className="hero-content-layer"
       >
         <div className="hero-inner">
 
-          <div className="hero-meta">
-            <span>YNR EVENTS</span>
+          {/* =========================
+              TOP META / NAVIGATION
+          ========================= */}
 
-            <span>
-              EVENTS · EXPERIENCES · MOMENTS
+          <div className="hero-meta">
+
+            <span className="hero-brand">
+              YNR EVENTS
             </span>
+
+            <nav
+              className="hero-navigation"
+              aria-label="Main navigation"
+            >
+              <a href="#events">
+                EVENTS
+              </a>
+
+              <span className="nav-separator">
+                ·
+              </span>
+
+              <a href="#experiences">
+                EXPERIENCES
+              </a>
+
+              <span className="nav-separator">
+                ·
+              </span>
+
+              <a href="#moments">
+                MOMENTS
+              </a>
+            </nav>
+
           </div>
+
+          {/* =========================
+              HERO TITLE
+          ========================= */}
 
           <div className="hero-main">
 
             <div className="hero-title-mask">
+
               <h1 className="cinematic-title">
 
                 <span className="hero-word">
@@ -501,15 +556,26 @@ function AnimatedHero() {
                 </span>
 
               </h1>
+
             </div>
 
+            {/* =========================
+                HERO DESCRIPTION
+            ========================= */}
+
             <div className="hero-copy">
+
               <p>
                 We transform celebrations, corporate
                 occasions and special moments into
                 experiences worth remembering.
               </p>
+
             </div>
+
+            {/* =========================
+                HERO ACTIONS
+            ========================= */}
 
             <div className="hero-actions-new">
 
@@ -517,7 +583,9 @@ function AnimatedHero() {
                 href="#events"
                 className="hero-button hero-button-main"
               >
-                <span>Explore Events</span>
+                <span>
+                  Explore Events
+                </span>
 
                 <span className="button-arrow">
                   ↗
@@ -528,7 +596,9 @@ function AnimatedHero() {
                 href="#enquiry"
                 className="hero-button hero-button-line"
               >
-                <span>Plan Your Event</span>
+                <span>
+                  Plan Your Event
+                </span>
 
                 <span className="button-arrow">
                   →
@@ -536,16 +606,25 @@ function AnimatedHero() {
               </a>
 
             </div>
+
           </div>
+
+          {/* =========================
+              HERO BOTTOM
+          ========================= */}
 
           <div className="hero-bottom">
 
             <div className="scroll-label">
-              <span>SCROLL TO DISCOVER</span>
+
+              <span>
+                SCROLL TO DISCOVER
+              </span>
 
               <div className="scroll-line">
                 <span />
               </div>
+
             </div>
 
             <a
