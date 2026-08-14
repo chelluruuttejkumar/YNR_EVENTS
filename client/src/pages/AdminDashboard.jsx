@@ -1,6 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "../lib/supabase";
 import "../styles/admin.css";
 
 const API_URL = "http://localhost:5000/api/enquiries";
@@ -14,8 +12,6 @@ const statuses = [
 ];
 
 function AdminDashboard() {
-  const navigate = useNavigate();
-
   const [enquiries, setEnquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -24,9 +20,9 @@ function AdminDashboard() {
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState("");
 
-  // ===============================
+  // =====================================
   // FETCH ENQUIRIES
-  // ===============================
+  // =====================================
 
   const fetchEnquiries = async () => {
     try {
@@ -38,13 +34,13 @@ function AdminDashboard() {
 
       if (!response.ok) {
         throw new Error(
-          result.message || "Failed to load enquiries"
+          result.message || "Failed to load enquiries."
         );
       }
 
       setEnquiries(result.data || []);
     } catch (err) {
-      console.error("Fetch enquiries error:", err);
+      console.error("❌ Fetch enquiries error:", err);
       setError("Unable to load enquiries.");
     } finally {
       setLoading(false);
@@ -55,33 +51,20 @@ function AdminDashboard() {
     fetchEnquiries();
   }, []);
 
-  // ===============================
+  // =====================================
   // LOGOUT
-  // ===============================
+  // =====================================
 
-  const handleLogout = async () => {
-    try {
-      sessionStorage.removeItem("ynr_admin_session");
+  const handleLogout = () => {
+    sessionStorage.removeItem("adminAuthenticated");
+    localStorage.removeItem("adminAuthenticated");
 
-      await supabase.auth.signOut();
-
-      navigate("/admin/login", {
-        replace: true,
-      });
-    } catch (error) {
-      console.error("Logout error:", error);
-
-      sessionStorage.removeItem("ynr_admin_session");
-
-      navigate("/admin/login", {
-        replace: true,
-      });
-    }
+    window.location.href = "/admin/login";
   };
 
-  // ===============================
+  // =====================================
   // UPDATE STATUS
-  // ===============================
+  // =====================================
 
   const updateStatus = async (id, status) => {
     try {
@@ -97,14 +80,20 @@ function AdminDashboard() {
 
       if (!response.ok) {
         throw new Error(
-          result.message || "Unable to update status"
+          result.message || "Unable to update status."
         );
       }
+
+      const updatedStatus =
+        result.data?.status || status;
 
       setEnquiries((prev) =>
         prev.map((item) =>
           item.id === id
-            ? { ...item, status }
+            ? {
+                ...item,
+                status: updatedStatus,
+              }
             : item
         )
       );
@@ -112,18 +101,24 @@ function AdminDashboard() {
       if (selected?.id === id) {
         setSelected((prev) => ({
           ...prev,
-          status,
+          status: updatedStatus,
         }));
       }
     } catch (err) {
-      console.error("Update status error:", err);
-      alert("Unable to update status.");
+      console.error(
+        "❌ Status update error:",
+        err
+      );
+
+      alert(
+        err.message || "Unable to update status."
+      );
     }
   };
 
-  // ===============================
+  // =====================================
   // DELETE ENQUIRY
-  // ===============================
+  // =====================================
 
   const deleteEnquiry = async (id) => {
     const confirmed = window.confirm(
@@ -133,15 +128,19 @@ function AdminDashboard() {
     if (!confirmed) return;
 
     try {
-      const response = await fetch(`${API_URL}/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${API_URL}/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       const result = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          result.message || "Unable to delete enquiry"
+          result.message ||
+            "Unable to delete enquiry."
         );
       }
 
@@ -153,45 +152,65 @@ function AdminDashboard() {
         setSelected(null);
       }
     } catch (err) {
-      console.error("Delete enquiry error:", err);
-      alert("Unable to delete enquiry.");
+      console.error(
+        "❌ Delete enquiry error:",
+        err
+      );
+
+      alert(
+        err.message ||
+          "Unable to delete enquiry."
+      );
     }
   };
 
-  // ===============================
-  // EVENT TYPES
-  // ===============================
+  // =====================================
+  // EVENT FILTER OPTIONS
+  // =====================================
 
   const eventTypes = useMemo(() => {
-    return [
-      "All",
+    const uniqueEvents = [
       ...new Set(
         enquiries
           .map((item) => item.event_type)
           .filter(Boolean)
       ),
     ];
+
+    return ["All", ...uniqueEvents];
   }, [enquiries]);
 
-  // ===============================
-  // FILTER
-  // ===============================
+  // =====================================
+  // FILTERED ENQUIRIES
+  // =====================================
 
   const filteredEnquiries = useMemo(() => {
-    const query = search.toLowerCase().trim();
+    const query = search
+      .toLowerCase()
+      .trim();
 
     return enquiries.filter((item) => {
       const matchesSearch =
         !query ||
-        item.name?.toLowerCase().includes(query) ||
-        item.phone?.toLowerCase().includes(query) ||
-        item.email?.toLowerCase().includes(query) ||
-        item.location?.toLowerCase().includes(query) ||
-        item.event_type?.toLowerCase().includes(query);
+        String(item.name || "")
+          .toLowerCase()
+          .includes(query) ||
+        String(item.phone || "")
+          .toLowerCase()
+          .includes(query) ||
+        String(item.email || "")
+          .toLowerCase()
+          .includes(query) ||
+        String(item.location || "")
+          .toLowerCase()
+          .includes(query) ||
+        String(item.event_type || "")
+          .toLowerCase()
+          .includes(query);
 
       const matchesStatus =
         statusFilter === "All" ||
-        (item.status || "New") === statusFilter;
+        item.status === statusFilter;
 
       const matchesEvent =
         eventFilter === "All" ||
@@ -210,17 +229,15 @@ function AdminDashboard() {
     eventFilter,
   ]);
 
-  // ===============================
+  // =====================================
   // STATS
-  // ===============================
+  // =====================================
 
   const stats = {
     total: enquiries.length,
 
     new: enquiries.filter(
-      (item) =>
-        !item.status ||
-        item.status === "New"
+      (item) => item.status === "New"
     ).length,
 
     contacted: enquiries.filter(
@@ -234,20 +251,54 @@ function AdminDashboard() {
     cancelled: enquiries.filter(
       (item) => item.status === "Cancelled"
     ).length,
+
+    paid: enquiries.filter(
+      (item) =>
+        String(item.payment_status || "")
+          .toLowerCase() === "paid"
+    ).length,
   };
 
-  // ===============================
-  // RENDER
-  // ===============================
+  // =====================================
+  // STATUS CLASS
+  // =====================================
+
+  const getStatusClass = (status) => {
+    return `status-select status-${String(
+      status || "New"
+    )
+      .toLowerCase()
+      .replace(/\s+/g, "-")}`;
+  };
+
+  // =====================================
+  // PAYMENT STATUS CLASS
+  // =====================================
+
+  const getPaymentClass = (status) => {
+    return String(status || "")
+      .toLowerCase() === "paid"
+      ? "payment-badge payment-paid"
+      : "payment-badge payment-pending";
+  };
+
+  // =====================================
+  // PAYMENT STATUS TEXT
+  // =====================================
+
+  const getPaymentStatus = (item) => {
+    return item.payment_status || "Pending";
+  };
 
   return (
     <div className="admin-page">
       <div className="admin-container">
 
-        {/* ================= HEADER ================= */}
+        {/* =====================================
+            HEADER
+        ===================================== */}
 
         <header className="admin-header">
-
           <div>
             <p className="admin-eyebrow">
               YNR EVENTS · ADMIN
@@ -259,8 +310,8 @@ function AdminDashboard() {
             </h1>
 
             <p className="admin-subtitle">
-              Manage your event enquiries and
-              customer requests.
+              Manage event enquiries and
+              customers.
             </p>
           </div>
 
@@ -269,7 +320,7 @@ function AdminDashboard() {
             <button
               className="admin-refresh"
               onClick={fetchEnquiries}
-              type="button"
+              disabled={loading}
             >
               ↻ Refresh
             </button>
@@ -277,16 +328,16 @@ function AdminDashboard() {
             <button
               className="admin-logout"
               onClick={handleLogout}
-              type="button"
             >
-              Logout ↗
+              Logout
             </button>
 
           </div>
-
         </header>
 
-        {/* ================= STATS ================= */}
+        {/* =====================================
+            STATS
+        ===================================== */}
 
         <section className="admin-stats">
 
@@ -311,13 +362,15 @@ function AdminDashboard() {
           </div>
 
           <div className="stat-card">
-            <span>Cancelled</span>
-            <strong>{stats.cancelled}</strong>
+            <span>Paid</span>
+            <strong>{stats.paid}</strong>
           </div>
 
         </section>
 
-        {/* ================= FILTERS ================= */}
+        {/* =====================================
+            FILTERS
+        ===================================== */}
 
         <section className="admin-toolbar">
 
@@ -368,7 +421,9 @@ function AdminDashboard() {
 
         </section>
 
-        {/* ================= ERROR ================= */}
+        {/* =====================================
+            ERROR
+        ===================================== */}
 
         {error && (
           <div className="admin-error">
@@ -376,12 +431,13 @@ function AdminDashboard() {
           </div>
         )}
 
-        {/* ================= TABLE ================= */}
+        {/* =====================================
+            TABLE
+        ===================================== */}
 
         <section className="admin-table-card">
 
           <div className="table-heading">
-
             <div>
               <p>ENQUIRIES</p>
 
@@ -389,17 +445,13 @@ function AdminDashboard() {
                 {filteredEnquiries.length} Requests
               </h2>
             </div>
-
           </div>
 
           {loading ? (
-
             <div className="admin-loading">
               Loading enquiries...
             </div>
-
           ) : filteredEnquiries.length === 0 ? (
-
             <div className="admin-empty">
 
               <div>✦</div>
@@ -409,14 +461,12 @@ function AdminDashboard() {
               </h3>
 
               <p>
-                New customer enquiries will
-                appear here.
+                New customer enquiries
+                will appear here.
               </p>
 
             </div>
-
           ) : (
-
             <div className="table-wrapper">
 
               <table>
@@ -429,59 +479,76 @@ function AdminDashboard() {
                     <th>Guests</th>
                     <th>Location</th>
                     <th>Status</th>
+                    <th>Payment</th>
                     <th>Action</th>
                   </tr>
                 </thead>
 
                 <tbody>
 
-                  {filteredEnquiries.map((item) => {
-
-                    const currentStatus =
-                      item.status || "New";
-
-                    return (
+                  {filteredEnquiries.map(
+                    (item) => (
                       <tr key={item.id}>
 
-                        <td>
+                        {/* CUSTOMER */}
 
+                        <td>
                           <div className="customer-cell">
 
                             <strong>
-                              {item.name}
+                              {item.name ||
+                                "Unknown Customer"}
                             </strong>
 
                             <small>
-                              {item.phone}
+                              {item.phone ||
+                                "No phone"}
                             </small>
 
-                          </div>
+                            {item.email && (
+                              <small>
+                                {item.email}
+                              </small>
+                            )}
 
+                          </div>
                         </td>
+
+                        {/* EVENT */}
 
                         <td>
                           {item.event_type || "—"}
                         </td>
 
+                        {/* DATE */}
+
                         <td>
                           {item.event_date || "—"}
                         </td>
+
+                        {/* GUESTS */}
 
                         <td>
                           {item.guests || "—"}
                         </td>
 
+                        {/* LOCATION */}
+
                         <td>
                           {item.location || "—"}
                         </td>
 
+                        {/* STATUS */}
+
                         <td>
 
                           <select
-                            className={`status-select status-${currentStatus
-                              .toLowerCase()
-                              .replace(/\s+/g, "-")}`}
-                            value={currentStatus}
+                            className={getStatusClass(
+                              item.status
+                            )}
+                            value={
+                              item.status || "New"
+                            }
                             onChange={(e) =>
                               updateStatus(
                                 item.id,
@@ -489,11 +556,11 @@ function AdminDashboard() {
                               )
                             }
                           >
-
                             {statuses
                               .filter(
                                 (status) =>
-                                  status !== "All"
+                                  status !==
+                                  "All"
                               )
                               .map((status) => (
                                 <option
@@ -503,17 +570,67 @@ function AdminDashboard() {
                                   {status}
                                 </option>
                               ))}
-
                           </select>
 
                         </td>
+
+                        {/* =================================
+                            PAYMENT STATUS ONLY
+
+                            IMPORTANT:
+                            Admin cannot make payment.
+                            Customer payment is handled
+                            from EnquiryForm/Razorpay.
+                        ================================= */}
+
+                        <td>
+
+                          <div className="payment-cell">
+
+                            <span
+                              className={getPaymentClass(
+                                item.payment_status
+                              )}
+                            >
+                              {getPaymentStatus(item)}
+                            </span>
+
+                            {String(
+                              item.payment_status || ""
+                            ).toLowerCase() ===
+                              "paid" &&
+                              item.payment_amount && (
+                                <strong className="payment-amount">
+                                  ₹
+                                  {Number(
+                                    item.payment_amount
+                                  ).toLocaleString(
+                                    "en-IN"
+                                  )}
+                                </strong>
+                              )}
+
+                            {String(
+                              item.payment_status || ""
+                            ).toLowerCase() ===
+                              "paid" &&
+                              item.payment_id && (
+                                <small className="payment-id">
+                                  {item.payment_id}
+                                </small>
+                              )}
+
+                          </div>
+
+                        </td>
+
+                        {/* ACTIONS */}
 
                         <td>
 
                           <div className="table-actions">
 
                             <button
-                              type="button"
                               onClick={() =>
                                 setSelected(item)
                               }
@@ -522,7 +639,6 @@ function AdminDashboard() {
                             </button>
 
                             <button
-                              type="button"
                               className="delete-btn"
                               onClick={() =>
                                 deleteEnquiry(
@@ -538,25 +654,25 @@ function AdminDashboard() {
                         </td>
 
                       </tr>
-                    );
-                  })}
+                    )
+                  )}
 
                 </tbody>
 
               </table>
 
             </div>
-
           )}
 
         </section>
 
       </div>
 
-      {/* ================= DETAILS MODAL ================= */}
+      {/* =====================================
+          DETAILS MODAL
+      ===================================== */}
 
       {selected && (
-
         <div
           className="admin-modal-backdrop"
           onClick={() =>
@@ -573,7 +689,6 @@ function AdminDashboard() {
 
             <button
               className="modal-close"
-              type="button"
               onClick={() =>
                 setSelected(null)
               }
@@ -586,14 +701,16 @@ function AdminDashboard() {
             </p>
 
             <h2>
-              {selected.name}
+              {selected.name ||
+                "Customer"}
             </h2>
+
+            {/* DETAILS */}
 
             <div className="details-grid">
 
               <div>
                 <span>Phone</span>
-
                 <strong>
                   {selected.phone || "—"}
                 </strong>
@@ -601,7 +718,6 @@ function AdminDashboard() {
 
               <div>
                 <span>Email</span>
-
                 <strong>
                   {selected.email || "—"}
                 </strong>
@@ -609,7 +725,6 @@ function AdminDashboard() {
 
               <div>
                 <span>Event</span>
-
                 <strong>
                   {selected.event_type || "—"}
                 </strong>
@@ -617,7 +732,6 @@ function AdminDashboard() {
 
               <div>
                 <span>Date</span>
-
                 <strong>
                   {selected.event_date || "—"}
                 </strong>
@@ -625,7 +739,6 @@ function AdminDashboard() {
 
               <div>
                 <span>Guests</span>
-
                 <strong>
                   {selected.guests || "—"}
                 </strong>
@@ -633,7 +746,6 @@ function AdminDashboard() {
 
               <div>
                 <span>Location</span>
-
                 <strong>
                   {selected.location || "—"}
                 </strong>
@@ -641,19 +753,65 @@ function AdminDashboard() {
 
               <div>
                 <span>Status</span>
-
                 <strong>
                   {selected.status || "New"}
                 </strong>
               </div>
 
+              {/* PAYMENT STATUS */}
+
+              <div>
+                <span>Payment</span>
+
+                <strong
+                  className={
+                    String(
+                      selected.payment_status || ""
+                    ).toLowerCase() === "paid"
+                      ? "modal-paid"
+                      : "modal-pending"
+                  }
+                >
+                  {getPaymentStatus(selected)}
+                </strong>
+              </div>
+
+              {/* PAYMENT AMOUNT */}
+
+              {selected.payment_amount && (
+                <div>
+                  <span>Amount</span>
+
+                  <strong>
+                    ₹
+                    {Number(
+                      selected.payment_amount
+                    ).toLocaleString(
+                      "en-IN"
+                    )}
+                  </strong>
+                </div>
+              )}
+
+              {/* PAYMENT ID */}
+
+              {selected.payment_id && (
+                <div>
+                  <span>Payment ID</span>
+
+                  <strong>
+                    {selected.payment_id}
+                  </strong>
+                </div>
+              )}
+
             </div>
+
+            {/* MESSAGE */}
 
             <div className="message-box">
 
-              <span>
-                MESSAGE
-              </span>
+              <span>MESSAGE</span>
 
               <p>
                 {selected.message ||
@@ -661,6 +819,8 @@ function AdminDashboard() {
               </p>
 
             </div>
+
+            {/* MODAL FOOTER */}
 
             <div className="modal-footer">
 
@@ -671,17 +831,7 @@ function AdminDashboard() {
                 Call Customer
               </a>
 
-              {selected.email && (
-                <a
-                  href={`mailto:${selected.email}`}
-                  className="call-customer"
-                >
-                  Email Customer
-                </a>
-              )}
-
               <button
-                type="button"
                 onClick={() =>
                   setSelected(null)
                 }
@@ -692,11 +842,8 @@ function AdminDashboard() {
             </div>
 
           </div>
-                
+
         </div>
-
-        
-
       )}
 
     </div>

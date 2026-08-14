@@ -1,34 +1,58 @@
+/* =========================================================
+   YNR EVENTS — ENQUIRY / PAYMENT
+========================================================= */
+
 .enquiry-section {
+  position: relative;
   width: 100%;
   min-height: 100vh;
-  padding: 140px 6%;
-  background: #111;
-  color: #fff;
+  padding: 160px 0;
+  background: #101010;
+  color: #f5f2eb;
+  overflow: hidden;
+}
+
+.enquiry-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .enquiry-container {
-  width: 100%;
-  max-width: 1200px;
+  position: relative;
+  z-index: 2;
+  width: min(1200px, calc(100% - 80px));
   margin: 0 auto;
 }
 
+/* =========================================================
+   HEADING
+========================================================= */
+
 .enquiry-heading {
-  margin-bottom: 80px;
+  max-width: 850px;
+  margin-bottom: 90px;
 }
 
 .enquiry-heading .section-label {
-  margin-bottom: 25px;
-  color: #999;
-  letter-spacing: 0.25em;
-  font-size: 12px;
+  margin-bottom: 30px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
 }
 
 .enquiry-heading h2 {
   margin: 0;
-  font-family: Georgia, serif;
-  font-size: clamp(55px, 8vw, 120px);
-  font-weight: 400;
-  line-height: 0.9;
+  font-family: var(--serif);
+  font-size: clamp(4rem, 8vw, 8rem);
+  font-weight: 500;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
 }
 
 .enquiry-heading h2 span {
@@ -36,11 +60,16 @@
 }
 
 .enquiry-description {
-  max-width: 600px;
+  max-width: 620px;
   margin-top: 35px;
-  color: #999;
-  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.98rem;
+  line-height: 1.8;
 }
+
+/* =========================================================
+   FORM
+========================================================= */
 
 .enquiry-form {
   width: 100%;
@@ -48,25 +77,27 @@
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 60px;
-  margin-bottom: 50px;
+  margin-bottom: 55px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .form-group.full-width {
-  margin-bottom: 50px;
+  margin-bottom: 55px;
 }
 
 .form-group label {
-  margin-bottom: 12px;
-  color: #999;
-  font-size: 11px;
-  letter-spacing: 0.15em;
+  margin-bottom: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
@@ -75,23 +106,36 @@
 .form-group textarea {
   width: 100%;
   padding: 16px 0;
-  border: none;
-  border-bottom: 1px solid #444;
+
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+
   outline: none;
   background: transparent;
   color: #fff;
-  font-size: 16px;
+
+  font-family: var(--sans);
+  font-size: 1rem;
+
+  transition:
+    border-color 0.35s ease,
+    padding 0.35s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
+  padding-left: 8px;
   border-bottom-color: #fff;
 }
 
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: #666;
+.form-group select {
+  cursor: pointer;
 }
 
 .form-group select option {
@@ -104,67 +148,368 @@
   resize: vertical;
 }
 
+/* =========================================================
+   PAYMENT INFORMATION
+========================================================= */
+
+.payment-info {
+  position: relative;
+
+  margin: 25px 0 45px;
+  padding: 24px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 40px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.payment-info > div {
+  display: flex;
+  align-items: baseline;
+  gap: 25px;
+}
+
+.payment-info span {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.payment-info strong {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.payment-info p {
+  max-width: 460px;
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.4);
+
+  font-size: 0.72rem;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   BOTTOM ACTIONS
+========================================================= */
+
 .form-bottom {
   display: flex;
   align-items: center;
-  gap: 35px;
+  gap: 40px;
   margin-top: 20px;
 }
 
 .enquiry-submit {
-  padding: 18px 28px;
+  position: relative;
+
+  min-width: 250px;
+  padding: 18px 22px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 40px;
+
   border: 1px solid #fff;
+
   background: #fff;
   color: #111;
-  cursor: pointer;
-  font-size: 12px;
+
+  font-family: var(--sans);
+  font-size: 0.7rem;
   letter-spacing: 0.15em;
-  transition: 0.3s ease;
+
+  text-transform: uppercase;
+
+  cursor: pointer;
+  overflow: hidden;
+
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    transform 0.35s ease;
 }
 
 .enquiry-submit:hover {
   background: transparent;
   color: #fff;
+  transform: translateY(-4px);
+}
+
+.enquiry-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.submit-arrow {
+  font-size: 1rem;
+  transition: transform 0.35s ease;
+}
+
+.enquiry-submit:hover .submit-arrow {
+  transform: translate(6px, -6px);
 }
 
 .direct-call {
-  color: #999;
-  font-size: 12px;
-  letter-spacing: 0.1em;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  color: rgba(255, 255, 255, 0.45);
+
+  font-size: 0.66rem;
+  letter-spacing: 0.15em;
+
   text-decoration: none;
+
+  transition: color 0.3s ease;
 }
 
 .direct-call span {
-  display: block;
-  margin-top: 7px;
+  color: #fff;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+}
+
+.direct-call:hover {
   color: #fff;
 }
 
+/* =========================================================
+   STATUS
+========================================================= */
+
 .form-status {
-  margin-top: 25px;
-  color: #fff;
+  position: relative;
+
+  margin-top: 35px;
+  padding: 16px 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  background: rgba(255, 255, 255, 0.035);
+
+  color: rgba(255, 255, 255, 0.75);
+
+  font-size: 0.78rem;
+  line-height: 1.5;
+
+  animation:
+    enquiryStatusIn 0.5s
+    cubic-bezier(0.2, 0.7, 0, 1);
 }
+
+.status-icon {
+  width: 26px;
+  height: 26px;
+
+  flex: 0 0 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+
+  font-size: 0.7rem;
+}
+
+.form-status.success {
+  border-color: rgba(140, 255, 190, 0.25);
+  color: rgba(190, 255, 215, 0.9);
+}
+
+.form-status.success .status-icon {
+  border-color: rgba(140, 255, 190, 0.5);
+}
+
+.form-status.error {
+  border-color: rgba(255, 100, 100, 0.25);
+  color: rgba(255, 190, 190, 0.9);
+}
+
+.form-status.error .status-icon {
+  border-color: rgba(255, 100, 100, 0.5);
+}
+
+.form-status.cancelled {
+  border-color: rgba(255, 220, 150, 0.25);
+  color: rgba(255, 225, 180, 0.9);
+}
+
+@keyframes enquiryStatusIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   LOADING BAR
+========================================================= */
+
+.enquiry-submit:disabled::after {
+  content: "";
+
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  width: 35%;
+  height: 2px;
+
+  background: #111;
+
+  animation:
+    enquiryLoading 1.2s
+    ease-in-out infinite;
+}
+
+@keyframes enquiryLoading {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  50% {
+    transform: translateX(180%);
+  }
+
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 768px) {
   .enquiry-section {
     padding: 90px 20px;
   }
 
+  .enquiry-container {
+    width: 100%;
+  }
+
+  .enquiry-heading {
+    margin-bottom: 60px;
+  }
+
+  .enquiry-heading h2 {
+    font-size: clamp(3.2rem, 15vw, 5.5rem);
+  }
+
+  .enquiry-description {
+    margin-top: 28px;
+    font-size: 0.88rem;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
     gap: 35px;
+    margin-bottom: 35px;
+  }
+
+  .form-group.full-width {
+    margin-bottom: 35px;
+  }
+
+  .payment-info {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 35px;
+  }
+
+  .payment-info > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .payment-info strong {
+    font-size: 1.7rem;
+  }
+
+  .payment-info p {
+    max-width: 100%;
+    font-size: 0.68rem;
   }
 
   .form-bottom {
     flex-direction: column;
     align-items: flex-start;
+    gap: 28px;
   }
 
   .enquiry-submit {
     width: 100%;
+    min-width: 0;
+  }
+
+  .direct-call {
+    font-size: 0.6rem;
+  }
+
+  .form-status {
+    align-items: flex-start;
+    font-size: 0.72rem;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+  .enquiry-section {
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   .enquiry-heading h2 {
-    font-size: 55px;
+    font-size: 3rem;
+  }
+
+  .payment-info strong {
+    font-size: 1.5rem;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .form-status,
+  .enquiry-submit:disabled::after {
+    animation: none;
+  }
+
+  .enquiry-submit {
+    transition: none;
   }
 }

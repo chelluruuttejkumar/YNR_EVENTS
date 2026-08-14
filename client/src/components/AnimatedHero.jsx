@@ -8,6 +8,7 @@ function AnimatedHero() {
   const heroRef = useRef(null);
   const imageRef = useRef(null);
   const contentRef = useRef(null);
+  const spotlightRef = useRef(null);
 
   useLayoutEffect(() => {
     const hero = heroRef.current;
@@ -18,37 +19,15 @@ function AnimatedHero() {
       const words = gsap.utils.toArray(".hero-word");
       const metaItems = gsap.utils.toArray(".hero-meta > *");
       const buttons = gsap.utils.toArray(".hero-button");
+      const particles = gsap.utils.toArray(".hero-particle");
 
-      /*
-       * --------------------------------
-       * CINEMATIC HERO INTRO
-       * --------------------------------
-       */
-
-      const intro = gsap.timeline({
-        defaults: {
-          ease: "power4.out",
-        },
-      });
-
-      gsap.set(
-        [
-          imageRef.current,
-          ".hero-overlay",
-          ".hero-meta > *",
-          ".hero-word",
-          ".hero-copy",
-          ".hero-actions-new",
-          ".hero-bottom",
-        ],
-        {
-          willChange: "transform, opacity",
-        }
-      );
+      /* =========================
+         INITIAL STATES
+      ========================= */
 
       gsap.set(imageRef.current, {
-        scale: 1.16,
-        opacity: 0.85,
+        scale: 1.18,
+        opacity: 0,
       });
 
       gsap.set(".hero-overlay", {
@@ -56,23 +35,23 @@ function AnimatedHero() {
       });
 
       gsap.set(metaItems, {
-        y: 20,
+        y: 25,
         opacity: 0,
       });
 
       gsap.set(words, {
-        yPercent: 110,
+        yPercent: 120,
         opacity: 0,
-        rotateX: 70,
+        rotateX: 75,
       });
 
       gsap.set(".hero-copy", {
-        y: 30,
+        y: 35,
         opacity: 0,
       });
 
       gsap.set(".hero-actions-new", {
-        y: 25,
+        y: 30,
         opacity: 0,
       });
 
@@ -81,30 +60,45 @@ function AnimatedHero() {
         opacity: 0,
       });
 
+      gsap.set(particles, {
+        opacity: 0,
+        scale: 0,
+      });
+
+      /* =========================
+         CINEMATIC INTRO
+      ========================= */
+
+      const intro = gsap.timeline({
+        defaults: {
+          ease: "power4.out",
+        },
+      });
+
       intro
         .to(imageRef.current, {
           scale: 1,
           opacity: 1,
-          duration: 2,
+          duration: 2.2,
           ease: "power3.out",
         })
         .to(
           ".hero-overlay",
           {
             opacity: 1,
-            duration: 1.1,
+            duration: 1.2,
           },
-          "-=1.5"
+          "-=1.7"
         )
         .to(
           metaItems,
           {
             y: 0,
             opacity: 1,
-            duration: 0.75,
-            stagger: 0.1,
+            duration: 0.8,
+            stagger: 0.12,
           },
-          "-=0.6"
+          "-=0.7"
         )
         .to(
           words,
@@ -112,18 +106,18 @@ function AnimatedHero() {
             yPercent: 0,
             opacity: 1,
             rotateX: 0,
-            duration: 1.15,
-            stagger: 0.12,
+            duration: 1.25,
+            stagger: 0.13,
             ease: "power4.out",
           },
-          "-=0.35"
+          "-=0.4"
         )
         .to(
           ".hero-copy",
           {
             y: 0,
             opacity: 1,
-            duration: 0.75,
+            duration: 0.8,
           },
           "-=0.55"
         )
@@ -132,7 +126,7 @@ function AnimatedHero() {
           {
             y: 0,
             opacity: 1,
-            duration: 0.65,
+            duration: 0.7,
           },
           "-=0.4"
         )
@@ -141,37 +135,43 @@ function AnimatedHero() {
           {
             y: 0,
             opacity: 1,
-            duration: 0.65,
+            duration: 0.7,
           },
           "-=0.3"
+        )
+        .to(
+          particles,
+          {
+            opacity: 0.8,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.12,
+          },
+          "-=0.5"
         );
 
-      /*
-       * --------------------------------
-       * HERO IMAGE PARALLAX
-       * --------------------------------
-       */
+      /* =========================
+         IMAGE PARALLAX
+      ========================= */
 
       gsap.to(imageRef.current, {
-        yPercent: 8,
+        yPercent: 10,
         scale: 1.08,
         ease: "none",
         scrollTrigger: {
           trigger: hero,
           start: "top top",
           end: "bottom top",
-          scrub: 1.2,
+          scrub: 1.4,
         },
       });
 
-      /*
-       * --------------------------------
-       * CONTENT PARALLAX
-       * --------------------------------
-       */
+      /* =========================
+         CONTENT PARALLAX
+      ========================= */
 
       gsap.to(contentRef.current, {
-        yPercent: -12,
+        yPercent: -10,
         ease: "none",
         scrollTrigger: {
           trigger: hero,
@@ -181,53 +181,65 @@ function AnimatedHero() {
         },
       });
 
-      /*
-       * --------------------------------
-       * ORBIT
-       * --------------------------------
-       */
+      /* =========================
+         ORBIT
+      ========================= */
 
       const orbit = hero.querySelector(".hero-orbit");
 
       if (orbit) {
         gsap.to(orbit, {
           rotation: 360,
-          duration: 28,
+          duration: 30,
           repeat: -1,
           ease: "none",
         });
       }
 
-      /*
-       * --------------------------------
-       * SCROLL INDICATOR
-       * --------------------------------
-       */
+      /* =========================
+         FLOATING PARTICLES
+      ========================= */
 
-      const scrollLine = hero.querySelector(".scroll-line span");
+      particles.forEach((particle, index) => {
+        gsap.to(particle, {
+          y: index % 2 === 0 ? -25 : 25,
+          x: index % 2 === 0 ? 15 : -15,
+          duration: 3 + index,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          delay: index * 0.4,
+        });
+      });
+
+      /* =========================
+         SCROLL LINE
+      ========================= */
+
+      const scrollLine = hero.querySelector(
+        ".scroll-line span"
+      );
 
       if (scrollLine) {
         gsap.fromTo(
           scrollLine,
           {
-            scaleY: 0,
-            transformOrigin: "top",
+            scaleX: 0,
+            transformOrigin: "left",
           },
           {
-            scaleY: 1,
-            duration: 1.4,
+            scaleX: 1,
+            duration: 1.8,
             repeat: -1,
-            ease: "power2.inOut",
             yoyo: true,
+            ease: "power2.inOut",
           }
         );
       }
 
-      /*
-       * --------------------------------
-       * DESKTOP MOUSE PARALLAX
-       * --------------------------------
-       */
+      /* =========================
+         DESKTOP MOUSE PARALLAX
+      ========================= */
 
       const isDesktop = window.matchMedia(
         "(pointer: fine) and (min-width: 769px)"
@@ -246,21 +258,32 @@ function AnimatedHero() {
 
         mouseY =
           (event.clientY / window.innerHeight - 0.5) * 2;
+
+        if (spotlightRef.current) {
+          gsap.to(spotlightRef.current, {
+            x: event.clientX,
+            y: event.clientY,
+            duration: 0.7,
+            ease: "power3.out",
+          });
+        }
       };
 
       const updateMouse = () => {
-        currentX += (mouseX - currentX) * 0.06;
-        currentY += (mouseY - currentY) * 0.06;
+        currentX += (mouseX - currentX) * 0.05;
+        currentY += (mouseY - currentY) * 0.05;
 
-        gsap.set(imageRef.current, {
-          x: currentX * 7,
-          y: currentY * 4,
-        });
+        if (imageRef.current) {
+          gsap.set(imageRef.current, {
+            x: currentX * 8,
+            y: currentY * 5,
+          });
+        }
 
         if (orbit) {
           gsap.set(orbit, {
-            x: currentX * 12,
-            y: currentY * 12,
+            x: currentX * 14,
+            y: currentY * 14,
           });
         }
 
@@ -282,11 +305,9 @@ function AnimatedHero() {
         requestAnimationFrame(updateMouse);
       }
 
-      /*
-       * --------------------------------
-       * BUTTON HOVER
-       * --------------------------------
-       */
+      /* =========================
+         BUTTON MAGNETIC HOVER
+      ========================= */
 
       buttons.forEach((button) => {
         const arrow = button.querySelector(
@@ -302,7 +323,8 @@ function AnimatedHero() {
 
           if (arrow) {
             gsap.to(arrow, {
-              x: 7,
+              x: 8,
+              y: -4,
               duration: 0.35,
               ease: "power3.out",
             });
@@ -313,14 +335,15 @@ function AnimatedHero() {
           gsap.to(button, {
             x: 0,
             y: 0,
-            duration: 0.5,
+            duration: 0.55,
             ease: "elastic.out(1, 0.45)",
           });
 
           if (arrow) {
             gsap.to(arrow, {
               x: 0,
-              duration: 0.4,
+              y: 0,
+              duration: 0.45,
               ease: "power3.out",
             });
           }
@@ -333,26 +356,24 @@ function AnimatedHero() {
         button._heroLeave = leave;
       });
 
-      /*
-       * --------------------------------
-       * TITLE HOVER
-       * --------------------------------
-       */
+      /* =========================
+         TITLE INTERACTION
+      ========================= */
 
       const title = hero.querySelector(
         ".cinematic-title"
       );
 
       if (title && isDesktop) {
-        const handleTitleEnter = () => {
+        const enter = () => {
           gsap.to(".hero-outline", {
-            x: 8,
+            x: 10,
             duration: 0.5,
             ease: "power3.out",
           });
         };
 
-        const handleTitleLeave = () => {
+        const leave = () => {
           gsap.to(".hero-outline", {
             x: 0,
             duration: 0.6,
@@ -360,25 +381,16 @@ function AnimatedHero() {
           });
         };
 
-        title.addEventListener(
-          "mouseenter",
-          handleTitleEnter
-        );
+        title.addEventListener("mouseenter", enter);
+        title.addEventListener("mouseleave", leave);
 
-        title.addEventListener(
-          "mouseleave",
-          handleTitleLeave
-        );
-
-        title._heroTitleEnter = handleTitleEnter;
-        title._heroTitleLeave = handleTitleLeave;
+        title._heroTitleEnter = enter;
+        title._heroTitleLeave = leave;
       }
 
-      /*
-       * --------------------------------
-       * CLEANUP
-       * --------------------------------
-       */
+      /* =========================
+         CLEANUP
+      ========================= */
 
       return () => {
         if (isDesktop) {
@@ -427,7 +439,7 @@ function AnimatedHero() {
 
   return (
     <section
-      className="hero cinematic-hero"
+      className="hero hero-cinematic"
       ref={heroRef}
     >
       <div
@@ -439,6 +451,17 @@ function AnimatedHero() {
       <div className="hero-overlay" />
       <div className="hero-vignette" />
       <div className="hero-grain" />
+
+      <div
+        ref={spotlightRef}
+        className="hero-spotlight"
+        aria-hidden="true"
+      />
+
+      <span className="hero-particle particle-1" />
+      <span className="hero-particle particle-2" />
+      <span className="hero-particle particle-3" />
+      <span className="hero-particle particle-4" />
 
       <div className="hero-orbit">
         <span>
@@ -454,6 +477,7 @@ function AnimatedHero() {
 
           <div className="hero-meta">
             <span>YNR EVENTS</span>
+
             <span>
               EVENTS · EXPERIENCES · MOMENTS
             </span>
@@ -494,6 +518,7 @@ function AnimatedHero() {
                 className="hero-button hero-button-main"
               >
                 <span>Explore Events</span>
+
                 <span className="button-arrow">
                   ↗
                 </span>
@@ -504,6 +529,7 @@ function AnimatedHero() {
                 className="hero-button hero-button-line"
               >
                 <span>Plan Your Event</span>
+
                 <span className="button-arrow">
                   →
                 </span>

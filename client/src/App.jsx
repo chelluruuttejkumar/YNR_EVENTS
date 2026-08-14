@@ -12,35 +12,79 @@ import Home from "./pages/Home";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 
+// =====================================
+// PROTECTED ADMIN ROUTE
+// =====================================
+
 function ProtectedAdmin() {
   const [loading, setLoading] = useState(true);
-  const [allowed, setAllowed] = useState(false);
+  const [session, setSession] = useState(null);
 
   useEffect(() => {
-    const checkAdminAccess = async () => {
-      try {
-        const adminSession =
-          sessionStorage.getItem("ynr_admin_session");
+    let mounted = true;
 
+    // Check current Supabase session
+    const checkSession = async () => {
+      try {
         const {
           data: { session },
+          error,
         } = await supabase.auth.getSession();
 
-        if (adminSession === "true" && session) {
-          setAllowed(true);
-        } else {
-          setAllowed(false);
+        if (error) {
+          console.error(
+            "❌ Admin session error:",
+            error
+          );
+
+          if (mounted) {
+            setSession(null);
+          }
+
+          return;
+        }
+
+        if (mounted) {
+          setSession(session);
         }
       } catch (error) {
-        console.error("Admin auth error:", error);
-        setAllowed(false);
+        console.error(
+          "❌ Authentication error:",
+          error
+        );
+
+        if (mounted) {
+          setSession(null);
+        }
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
-    checkAdminAccess();
+    checkSession();
+
+    // Listen for login/logout/session changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        if (mounted) {
+          setSession(session);
+        }
+      }
+    );
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
+
+  // =====================================
+  // LOADING
+  // =====================================
 
   if (loading) {
     return (
@@ -51,48 +95,84 @@ function ProtectedAdmin() {
           placeItems: "center",
           background: "#080808",
           color: "#ffffff",
-          fontFamily: "Arial, sans-serif",
+          fontFamily:
+            "Arial, sans-serif",
+          fontSize: "16px",
         }}
       >
-        Loading...
+        Checking admin access...
       </div>
     );
   }
 
-  if (!allowed) {
-    return <Navigate to="/admin/login" replace />;
+  // =====================================
+  // NOT LOGGED IN
+  // =====================================
+
+  if (!session) {
+    return (
+      <Navigate
+        to="/admin/login"
+        replace
+      />
+    );
   }
+
+  // =====================================
+  // AUTHENTICATED ADMIN
+  // =====================================
 
   return <AdminDashboard />;
 }
+
+// =====================================
+// APP
+// =====================================
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* Main Website */}
+        {/* =================================
+            MAIN WEBSITE
+        ================================= */}
+
         <Route
           path="/"
           element={<Home />}
         />
 
-        {/* Admin Login */}
+        {/* =================================
+            ADMIN LOGIN
+        ================================= */}
+
         <Route
           path="/admin/login"
           element={<AdminLogin />}
         />
 
-        {/* Protected Admin Dashboard */}
+        {/* =================================
+            PROTECTED ADMIN DASHBOARD
+        ================================= */}
+
         <Route
           path="/admin"
           element={<ProtectedAdmin />}
         />
 
-        {/* Unknown URL */}
+        {/* =================================
+            UNKNOWN ROUTE
+        ================================= */}
+
         <Route
           path="*"
-          element={<Navigate to="/" replace />}
+          element={
+            <Navigate
+              to="/"
+              replace
+            />
+          }
         />
 
       </Routes>
