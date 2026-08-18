@@ -32,7 +32,10 @@ function AdminDashboard() {
       setLoading(true);
       setError("");
 
-      const response = await fetch(API_URL);
+      const response = await fetch(`${API_URL}`, {
+        method: "GET",
+      });
+
       const result = await response.json();
 
       if (!response.ok) {
@@ -48,7 +51,7 @@ function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   useEffect(() => {
     fetchEnquiries();
