@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "../styles/admin.css";
 
-const API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:5000"
-    : "https://ynr-events.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL || "https://ynr-events.onrender.com";
 
 const statuses = [
   "All",
@@ -32,10 +29,7 @@ function AdminDashboard() {
       setLoading(true);
       setError("");
 
-      const response = await fetch(`${API_URL}`, {
-        method: "GET",
-      });
-
+      const response = await fetch(API_URL);
       const result = await response.json();
 
       if (!response.ok) {
@@ -51,7 +45,7 @@ function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
   useEffect(() => {
     fetchEnquiries();
