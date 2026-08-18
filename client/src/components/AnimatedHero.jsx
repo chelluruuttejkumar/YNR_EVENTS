@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -518,17 +519,17 @@ function AnimatedHero() {
                 ·
               </span>
 
-              <a href="#experiences">
+              <Link to="/experiences">
                 EXPERIENCES
-              </a>
+              </Link>
 
               <span className="nav-separator">
                 ·
               </span>
 
-              <a href="#moments">
+              <Link to="/moments">
                 MOMENTS
-              </a>
+              </Link>
             </nav>
 
           </div>
