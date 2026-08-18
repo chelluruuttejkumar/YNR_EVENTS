@@ -42,10 +42,11 @@ function AdminDashboard() {
     } catch (err) {
       console.error("❌ Fetch enquiries error:", err);
       setError("Unable to load enquiries.");
+      alert(err.message || "Unable to load enquiries.");
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   useEffect(() => {
     fetchEnquiries();
