@@ -11,6 +11,8 @@ import { supabase } from "./lib/supabase";
 import Home from "./pages/Home";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import Experiences from "./pages/Experiences";
+import Moments from "./pages/Moments";
 
 // =====================================
 // PROTECTED ADMIN ROUTE
@@ -141,6 +143,24 @@ function App() {
         <Route
           path="/"
           element={<Home />}
+        />
+
+        {/* =================================
+            EXPERIENCES
+        ================================= */}
+
+        <Route
+          path="/experiences"
+          element={<Experiences />}
+        />
+
+        {/* =================================
+            MOMENTS
+        ================================= */}
+
+        <Route
+          path="/moments"
+          element={<Moments />}
         />
 
         {/* =================================
