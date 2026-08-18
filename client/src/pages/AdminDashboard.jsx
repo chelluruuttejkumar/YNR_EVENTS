@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import "../styles/admin.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://ynr-events.onrender.com/api/enquiries";
+const API_URL = import.meta.env.VITE_API_URL || "https://ynr-events.onrender.com";
+const ENQUIRIES_URL = `${API_URL}/api/enquiries`;
 
 const statuses = [
   "All",
@@ -29,7 +30,7 @@ function AdminDashboard() {
       setLoading(true);
       setError("");
 
-      const response = await fetch(API_URL);
+      const response = await fetch(ENQUIRIES_URL);
       const result = await response.json();
 
       if (!response.ok) {
@@ -69,7 +70,7 @@ function AdminDashboard() {
 
   const updateStatus = async (id, status) => {
     try {
-      const response = await fetch(`${API_URL}/${id}`, {
+      const response = await fetch(`${ENQUIRIES_URL}/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -130,7 +131,7 @@ function AdminDashboard() {
 
     try {
       const response = await fetch(
-        `${API_URL}/${id}`,
+        `${ENQUIRIES_URL}/${id}`,
         {
           method: "DELETE",
         }
