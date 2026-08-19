@@ -9,7 +9,7 @@ const API_URL =
 
 const INITIAL_FORM = {
   name: "",
-  phone: "7569862230",
+  phone: "",
   email: "",
   event_type: "",
   event_date: "",
