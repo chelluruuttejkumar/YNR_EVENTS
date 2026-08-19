@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AnimatedHero from "../components/AnimatedHero";
 import EventGallery from "../components/EventGallery";
 import EnquiryForm from "../components/EnquiryForm";
+import Packages from "../components/Packages";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -461,6 +462,8 @@ function Home() {
         ========================================= */}
 
         <EventGallery />
+
+        <Packages />
 
         {/* =========================================
             ENQUIRY

@@ -643,4 +643,4 @@ function AnimatedHero() {
   );
 }
 
-export default AnimatedHero;
+export default AnimatedHero;  
