@@ -1,0 +1,395 @@
+
+/* =========================================================
+   YNR EVENTS — WHY YNR
+========================================================= */
+
+.why-ynr-section {
+  position: relative;
+
+  padding: 170px 0;
+
+  background: #f1eee8;
+  color: #111;
+
+  overflow: hidden;
+}
+
+.why-ynr-section::after {
+  content: "YNR";
+
+  position: absolute;
+
+  right: -80px;
+  bottom: -190px;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 34vw;
+  line-height: 1;
+
+  color: rgba(17, 17, 17, 0.035);
+
+  pointer-events: none;
+}
+
+.why-ynr-container {
+  position: relative;
+  z-index: 2;
+
+  width: min(1380px, calc(100% - 80px));
+
+  margin: 0 auto;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.why-ynr-header {
+  display: grid;
+
+  grid-template-columns: 1.15fr 0.85fr;
+
+  gap: 80px;
+
+  align-items: end;
+
+  margin-bottom: 105px;
+}
+
+.why-ynr-header h2 {
+  margin: 0;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: clamp(4.5rem, 8vw, 8.5rem);
+
+  font-weight: 500;
+
+  line-height: 0.82;
+
+  letter-spacing: -0.055em;
+}
+
+.why-ynr-header h2 em {
+  font-style: italic;
+}
+
+.why-ynr-intro {
+  max-width: 450px;
+
+  margin: 0;
+
+  color: rgba(17, 17, 17, 0.55);
+
+  font-size: 0.95rem;
+
+  line-height: 1.8;
+}
+
+/* =========================================================
+   LIST
+========================================================= */
+
+.why-ynr-list {
+  border-top: 1px solid rgba(17, 17, 17, 0.18);
+}
+
+.why-ynr-item {
+  position: relative;
+
+  min-height: 190px;
+
+  padding: 38px 0;
+
+  display: grid;
+
+  grid-template-columns: 90px 1fr 1.2fr 40px;
+
+  align-items: center;
+
+  gap: 30px;
+
+  border-bottom: 1px solid rgba(17, 17, 17, 0.18);
+
+  will-change: transform;
+
+  transition:
+    background 0.35s ease;
+}
+
+.why-ynr-item:hover {
+  background: rgba(17, 17, 17, 0.025);
+}
+
+.why-ynr-number {
+  font-size: 0.65rem;
+
+  letter-spacing: 0.15em;
+
+  color: rgba(17, 17, 17, 0.42);
+}
+
+.why-ynr-title {
+  margin: 0;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: clamp(2rem, 3.5vw, 3.7rem);
+
+  font-weight: 500;
+
+  line-height: 0.9;
+
+  letter-spacing: -0.04em;
+
+  transition:
+    transform 0.4s ease;
+}
+
+.why-ynr-description {
+  max-width: 470px;
+
+  margin: 0;
+
+  color: rgba(17, 17, 17, 0.6);
+
+  font-size: 0.85rem;
+
+  line-height: 1.8;
+}
+
+.why-ynr-arrow {
+  justify-self: end;
+
+  font-size: 1.2rem;
+
+  color: rgba(17, 17, 17, 0.55);
+
+  transition:
+    transform 0.4s ease;
+}
+
+/* =========================================================
+   FOOTER CTA
+========================================================= */
+
+.why-ynr-footer {
+  margin-top: 85px;
+
+  padding-top: 28px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  border-top: 1px solid rgba(17, 17, 17, 0.18);
+}
+
+.why-ynr-footer p {
+  max-width: 320px;
+
+  margin: 0;
+
+  color: rgba(17, 17, 17, 0.45);
+
+  font-size: 0.62rem;
+
+  letter-spacing: 0.2em;
+
+  line-height: 1.6;
+
+  text-transform: uppercase;
+}
+
+.why-ynr-cta {
+  min-width: 250px;
+
+  padding: 18px 20px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  border: 1px solid rgba(17, 17, 17, 0.5);
+
+  color: #111;
+
+  font-size: 0.68rem;
+
+  letter-spacing: 0.14em;
+
+  text-transform: uppercase;
+
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    transform 0.35s ease;
+}
+
+.why-ynr-cta:hover {
+  background: #111;
+
+  color: #fff;
+
+  transform: translateY(-4px);
+}
+
+.why-ynr-cta span:last-child {
+  font-size: 1rem;
+
+  transition:
+    transform 0.35s ease;
+}
+
+.why-ynr-cta:hover span:last-child {
+  transform: translate(6px, -6px);
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .why-ynr-section {
+    padding: 125px 0;
+  }
+
+  .why-ynr-container {
+    width: calc(100% - 60px);
+  }
+
+  .why-ynr-header {
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+
+    margin-bottom: 75px;
+  }
+
+  .why-ynr-item {
+    grid-template-columns: 70px 1fr 1fr 35px;
+
+    gap: 20px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+  .why-ynr-section {
+    padding: 90px 0;
+  }
+
+  .why-ynr-container {
+    width: calc(100% - 40px);
+  }
+
+  .why-ynr-header {
+    margin-bottom: 55px;
+  }
+
+  .why-ynr-header h2 {
+    font-size: clamp(3.3rem, 15vw, 5.5rem);
+  }
+
+  .why-ynr-intro {
+    font-size: 0.88rem;
+
+    line-height: 1.7;
+  }
+
+  .why-ynr-item {
+    min-height: 0;
+
+    padding: 30px 0;
+
+    display: grid;
+
+    grid-template-columns: 42px 1fr 25px;
+
+    align-items: start;
+
+    gap: 14px;
+  }
+
+  .why-ynr-number {
+    padding-top: 5px;
+
+    font-size: 0.58rem;
+  }
+
+  .why-ynr-title {
+    font-size: 2.1rem;
+  }
+
+  .why-ynr-description {
+    grid-column: 2 / -1;
+
+    max-width: 100%;
+
+    margin-top: 5px;
+
+    font-size: 0.78rem;
+
+    line-height: 1.7;
+  }
+
+  .why-ynr-arrow {
+    padding-top: 5px;
+
+    font-size: 1rem;
+  }
+
+  .why-ynr-footer {
+    margin-top: 55px;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .why-ynr-cta {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+  .why-ynr-container {
+    width: calc(100% - 30px);
+  }
+
+  .why-ynr-title {
+    font-size: 1.9rem;
+  }
+
+  .why-ynr-description {
+    font-size: 0.75rem;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .why-ynr-item,
+  .why-ynr-title,
+  .why-ynr-arrow,
+  .why-ynr-cta {
+    transition: none;
+  }
+}
+

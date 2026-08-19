@@ -7,7 +7,11 @@ import AnimatedHero from "../components/AnimatedHero";
 import EventGallery from "../components/EventGallery";
 import EnquiryForm from "../components/EnquiryForm";
 import Packages from "../components/Packages";
+import Process from "../components/Process";
+import WhyYNR from "../components/WhyYNR";
 
+import FAQ from "../components/FAQ";
+import Footer from "../components/Footer";
 gsap.registerPlugin(ScrollTrigger);
 
 const events = [
@@ -465,6 +469,12 @@ function Home() {
 
         <Packages />
 
+        <Process />
+
+        <WhyYNR />
+
+        <FAQ />
+
         {/* =========================================
             ENQUIRY
         ========================================= */}
@@ -507,6 +517,7 @@ function Home() {
             </a>
           </div>
         </section>
+        <Footer />
       </main>
     </div>
   );
