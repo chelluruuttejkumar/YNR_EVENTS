@@ -147,8 +147,8 @@ function Footer() {
                 +91 75698 62230
               </a>
 
-              <a href="mailto:hello@ynrevents.com">
-                hello@ynrevents.com
+              <a href="mailto:ynreventsofficial@gmail.com">
+                ynreventsofficial@gmail.com
               </a>
 
               <a href="https://wa.me/917569862230">
