@@ -271,77 +271,92 @@ function EnquiryForm() {
   // =====================================
   // SUBMIT NEW ENQUIRY
   // =====================================
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  if (loading) return;
 
-    if (loading) return;
+  setLoading(true);
+  setStatus("Sending your enquiry...");
 
-    setLoading(true);
-    setStatus("Sending your enquiry...");
-
-    try {
-      const response = await fetch(
-        `${API_URL}/api/enquiries`,
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const result =
-        await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          result.message ||
-            "Unable to submit enquiry."
-        );
+  try {
+    const response = await fetch(
+      `${API_URL}/api/enquiries`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+        body: JSON.stringify(formData),
       }
+    );
 
-      const enquiry = Array.isArray(
-        result.data
-      )
-        ? result.data[0]
-        : result.data;
+    const result =
+      await response.json();
 
-      if (!enquiry?.id) {
-        throw new Error(
-          "Enquiry ID was not returned by server."
-        );
-      }
-
-      // Save enquiry ID permanently in component state
-      // until payment succeeds.
-      setEnquiryId(enquiry.id);
-
-      setStatus(
-        "Enquiry received. Opening secure payment..."
+    if (!response.ok) {
+      throw new Error(
+        result.message ||
+          "Unable to submit enquiry."
       );
-
-      await startPayment(enquiry.id);
-    } catch (error) {
-      console.error(
-        "❌ Enquiry error:",
-        error
-      );
-
-      setStatus(
-        `error: ${
-          error.message ||
-          "Unable to send enquiry. Please call us."
-        }`
-      );
-
-      setLoading(false);
     }
-  };
+
+    const enquiry = Array.isArray(
+      result.data
+    )
+      ? result.data[0]
+      : result.data;
+
+    if (!enquiry?.id) {
+      throw new Error(
+        "Enquiry ID was not returned by server."
+      );
+    }
+
+    setEnquiryId(enquiry.id);
+
+    setLoading(false);
+
+    const wantsToPay =
+      window.confirm(
+        "Your enquiry has been submitted successfully.\n\nWould you like to pay the ₹5,000 booking advance now?"
+      );
+
+    if (wantsToPay) {
+      setStatus(
+        "Opening secure payment..."
+      );
+
+      await startPayment(
+        enquiry.id
+      );
+    } else {
+      setStatus(
+        "success: Your enquiry has been submitted successfully. You can make the payment later."
+      );
+
+      setFormData({
+        ...INITIAL_FORM,
+        phone: "7569862230",
+      });
+    }
+  } catch (error) {
+    console.error(
+      "❌ Enquiry error:",
+      error
+    );
+
+    setStatus(
+      `error: ${
+        error.message ||
+        "Unable to send enquiry. Please call us."
+      }`
+    );
+
+    setLoading(false);
+  }
+};
 
   // =====================================
   // RETRY PAYMENT
@@ -664,7 +679,7 @@ function EnquiryForm() {
                 <span>
                   {loading
                     ? "PROCESSING..."
-                    : "SEND ENQUIRY & PAY"}
+                    : "SUBMIT ENQUIRY"}
                 </span>
 
                 <span className="submit-arrow">
@@ -675,26 +690,24 @@ function EnquiryForm() {
             )}
 
             {/* Retry button */}
-            {enquiryId && (
-              <button
-                type="button"
-                className="enquiry-submit payment-retry"
-                onClick={handleRetryPayment}
-                disabled={loading}
-              >
+           {enquiryId && (
+  <button
+    type="button"
+    className="enquiry-submit payment-retry"
+    onClick={handleRetryPayment}
+    disabled={loading}
+  >
+    <span>
+      {loading
+        ? "PROCESSING..."
+        : "PAY ₹5,000 ADVANCE"}
+    </span>
 
-                <span>
-                  {loading
-                    ? "PROCESSING..."
-                    : "RETRY PAYMENT"}
-                </span>
-
-                <span className="submit-arrow">
-                  {loading ? "…" : "↗"}
-                </span>
-
-              </button>
-            )}
+    <span className="submit-arrow">
+      {loading ? "…" : "↗"}
+    </span>
+  </button>
+)}
 
             <a
               href="tel:7569862230"
