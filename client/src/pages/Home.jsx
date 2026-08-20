@@ -9,6 +9,7 @@ import EnquiryForm from "../components/EnquiryForm";
 import Packages from "../components/Packages";
 import Process from "../components/Process";
 import WhyYNR from "../components/WhyYNR";
+import StickyContact from "../components/StickyContact";
 
 import FAQ from "../components/FAQ";
 import Footer from "../components/Footer";
@@ -518,6 +519,8 @@ function Home() {
           </div>
         </section>
         <Footer />
+
+<StickyContact />
       </main>
     </div>
   );

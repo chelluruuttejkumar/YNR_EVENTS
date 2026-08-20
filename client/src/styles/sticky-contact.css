@@ -1,0 +1,241 @@
+
+/* =========================================================
+   YNR EVENTS — STICKY CONTACT CTA
+========================================================= */
+
+.sticky-contact-desktop {
+  position: fixed;
+
+  right: 28px;
+  bottom: 28px;
+
+  z-index: 900;
+
+  opacity: 0;
+}
+
+.sticky-contact-button {
+  position: relative;
+
+  min-width: 180px;
+
+  padding: 16px 18px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 25px;
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  background: rgba(15, 15, 15, 0.78);
+
+  color: #fff;
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.25);
+
+  font-size: 0.62rem;
+
+  font-weight: 500;
+
+  letter-spacing: 0.16em;
+
+  text-transform: uppercase;
+
+  overflow: hidden;
+
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease,
+    transform 0.35s ease;
+}
+
+.sticky-contact-button::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background: #fff;
+
+  transform: translateY(101%);
+
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.7, 0, 1);
+}
+
+.sticky-contact-button:hover::before {
+  transform: translateY(0);
+}
+
+.sticky-contact-button:hover {
+  color: #111;
+
+  border-color: #fff;
+
+  transform: translateY(-4px);
+}
+
+.sticky-contact-button span {
+  position: relative;
+
+  z-index: 2;
+}
+
+.sticky-contact-arrow {
+  font-size: 1rem;
+
+  transition:
+    transform 0.35s ease;
+}
+
+.sticky-contact-button:hover
+  .sticky-contact-arrow {
+  transform: translate(5px, -5px);
+}
+
+/* =========================================================
+   MOBILE BAR
+========================================================= */
+
+.sticky-contact-mobile {
+  display: none;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+  .sticky-contact-desktop {
+    display: none;
+  }
+
+  .sticky-contact-mobile {
+    position: fixed;
+
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+
+    z-index: 900;
+
+    padding: 8px;
+
+    display: grid;
+
+    grid-template-columns:
+      1fr 0.8fr 1.3fr;
+
+    gap: 6px;
+
+    border: 1px solid
+      rgba(255, 255, 255, 0.12);
+
+    background: rgba(12, 12, 12, 0.86);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+      0 15px 45px rgba(0, 0, 0, 0.35);
+
+    border-radius: 16px;
+
+    opacity: 0;
+  }
+
+  .sticky-mobile-action {
+    min-height: 48px;
+
+    padding: 10px 8px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    border-radius: 10px;
+
+    color: rgba(255, 255, 255, 0.7);
+
+    font-size: 0.58rem;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    transition:
+      background 0.3s ease,
+      color 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .sticky-mobile-action:active {
+    transform: scale(0.96);
+  }
+
+  .sticky-mobile-main {
+    background: #fff;
+
+    color: #111;
+  }
+
+  .sticky-mobile-icon {
+    width: 22px;
+    height: 22px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid
+      rgba(255, 255, 255, 0.28);
+
+    border-radius: 50%;
+
+    font-size: 0.58rem;
+  }
+
+  .sticky-mobile-main
+    .sticky-mobile-arrow {
+    font-size: 0.9rem;
+  }
+}
+
+/* =========================================================
+   SAFE AREA
+========================================================= */
+
+@supports (padding: env(safe-area-inset-bottom)) {
+  @media (max-width: 700px) {
+    .sticky-contact-mobile {
+      bottom: calc(
+        12px + env(safe-area-inset-bottom)
+      );
+    }
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .sticky-contact-button,
+  .sticky-mobile-action {
+    transition: none;
+  }
+}
+
